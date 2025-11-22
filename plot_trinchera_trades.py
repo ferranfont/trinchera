@@ -22,12 +22,6 @@ from config_trinchera import (
 )
 
 # ============================================================================
-# FILTER CONFIGURATION
-# ============================================================================
-FILTER_FROM_14H = True  # Set to True to show only data from 14:00:00 onwards
-START_TIME = "14:50:00"  # Start time for filtering
-
-# ============================================================================
 # CONFIGURATION
 # ============================================================================
 CURRENT_DIR = Path(__file__).resolve().parent
@@ -59,12 +53,6 @@ df = df.sort_values('timestamp')
 
 print(f"[OK] Loaded {len(df):,} frames (total)")
 
-# Apply time filter if enabled
-if FILTER_FROM_14H:
-    df = df[df['timestamp'].dt.time >= pd.to_datetime(START_TIME).time()].copy()
-    print(f"[INFO] Filter applied: showing only from {START_TIME} onwards")
-    print(f"[OK] Filtered to {len(df):,} frames")
-
 print(f"[INFO] Date range: {df['timestamp'].min()} to {df['timestamp'].max()}")
 print(f"[INFO] Price range: {df['close'].min():.2f} to {df['close'].max():.2f}")
 
@@ -78,11 +66,6 @@ if TRADES_FILE.exists():
     df_trades['exit_time'] = pd.to_datetime(df_trades['exit_time'])
 
     print(f"[OK] Loaded {len(df_trades)} trades (total)")
-
-    # Apply time filter to trades if enabled
-    if FILTER_FROM_14H:
-        df_trades = df_trades[df_trades['entry_time'].dt.time >= pd.to_datetime(START_TIME).time()].copy()
-        print(f"[INFO] Filtered trades from {START_TIME} onwards: {len(df_trades)} trades")
 else:
     print(f"\n[WARN] Trades file not found: {TRADES_FILE.name}")
 
@@ -100,11 +83,6 @@ if BINS_FILE.exists():
     df_bins['end_timeout_mean_reversion'] = pd.to_datetime(df_bins['end_timeout_mean_reversion'])
 
     print(f"[OK] Loaded {len(df_bins)} big volume events (total)")
-
-    # Apply time filter to big volume events if enabled
-    if FILTER_FROM_14H:
-        df_bins = df_bins[df_bins['timestamp'].dt.time >= pd.to_datetime(START_TIME).time()].copy()
-        print(f"[INFO] Filtered big volume events from {START_TIME} onwards: {len(df_bins)} events")
 
     big_volume_events = df_bins['timestamp'].tolist()
 
