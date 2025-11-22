@@ -23,3 +23,6 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
+
+# Large files (>100MB)
+data/historic/time_and_sales_nq_all.csv
