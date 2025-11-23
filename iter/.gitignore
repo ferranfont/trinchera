@@ -1,5 +1,2 @@
-# Ignore all iter_summary outputs (large CSV and HTML files)
-iter_summary/
-
-# Keep the directory structure
-!iter_summary/.gitkeep
+# Ignore all outputs in iter summary outputs folder
+iter summary outputs/

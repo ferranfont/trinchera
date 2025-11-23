@@ -1,7 +1,7 @@
 """
 Batch Process All Dates
 Automatically runs the Trinchera pipeline for all available dates in data/historic/
-Stores results in iter/iter_summary/ organized by date
+Stores results in iter/iter summary outputs/ organized by date
 """
 
 import subprocess
@@ -20,15 +20,15 @@ DATA_DIR = REPO_ROOT / "data" / "historic"
 CONFIG_FILE = REPO_ROOT / "config_trinchera.py"
 MAIN_SCRIPT = REPO_ROOT / "main_trinchera.py"
 
-# Output directories
-ITER_SUMMARY_DIR = CURRENT_DIR / "iter_summary"
-ITER_SUMMARY_DIR.mkdir(parents=True, exist_ok=True)
+# Output directory
+OUTPUT_DIR = CURRENT_DIR / "iter summary outputs"
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 print("=" * 80)
 print("TRINCHERA BATCH PROCESSOR - ALL DATES")
 print("=" * 80)
 print(f"\nData directory: {DATA_DIR}")
-print(f"Output directory: {ITER_SUMMARY_DIR}")
+print(f"Output directory: {OUTPUT_DIR}")
 
 # ============================================================================
 # STEP 1: FIND ALL DATES
@@ -117,8 +117,8 @@ for idx, date in enumerate(dates, 1):
         if result.returncode == 0:
             print(f"\n[OK] Pipeline completed successfully for {date}")
 
-            # Move outputs to iter_summary/{date}/
-            date_output_dir = ITER_SUMMARY_DIR / date
+            # Move outputs to iter/iter summary outputs/{date}/
+            date_output_dir = OUTPUT_DIR / date
             date_output_dir.mkdir(parents=True, exist_ok=True)
 
             # Copy CSV outputs
@@ -126,14 +126,14 @@ for idx, date in enumerate(dates, 1):
             for csv_file in outputs_dir.glob(f"*_{date}.csv"):
                 dest = date_output_dir / csv_file.name
                 shutil.copy2(csv_file, dest)
-                print(f"[OK] Copied: {csv_file.name} → iter_summary/{date}/")
+                print(f"[OK] Copied: {csv_file.name} → iter/{date}/")
 
             # Copy HTML charts
             charts_dir = REPO_ROOT / "charts"
             for html_file in charts_dir.glob(f"*_{date}.html"):
                 dest = date_output_dir / html_file.name
                 shutil.copy2(html_file, dest)
-                print(f"[OK] Copied: {html_file.name} → iter_summary/{date}/")
+                print(f"[OK] Copied: {html_file.name} → iter/{date}/")
 
             successful += 1
             results.append({
@@ -197,7 +197,7 @@ for result in results:
         print()
 
 # Save summary to CSV
-summary_file = ITER_SUMMARY_DIR / f"batch_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+summary_file = OUTPUT_DIR / f"batch_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
 with open(summary_file, 'w') as f:
     f.write("date;status;error\n")
     for result in results:
@@ -208,5 +208,36 @@ print(f"\n[OK] Summary saved to: {summary_file.name}")
 
 print("\n" + "=" * 80)
 print(f"[SUCCESS] Batch processing completed!")
-print(f"[SUCCESS] Results stored in: {ITER_SUMMARY_DIR}")
+print(f"[SUCCESS] Results stored in: {OUTPUT_DIR}")
+print("=" * 80)
+
+# ============================================================================
+# STEP 4: AGGREGATE RESULTS
+# ============================================================================
+if successful > 0:
+    print("\n" + "=" * 80)
+    print("STEP 4: AGGREGATING RESULTS")
+    print("=" * 80)
+
+    aggregate_script = CURRENT_DIR / "aggregate_results.py"
+    print(f"\n[INFO] Running aggregate_results.py...")
+
+    try:
+        result = subprocess.run(
+            [sys.executable, str(aggregate_script)],
+            cwd=str(CURRENT_DIR),
+            capture_output=False,  # Show output in real-time
+            text=True
+        )
+
+        if result.returncode == 0:
+            print("\n[OK] Aggregation completed successfully!")
+        else:
+            print(f"\n[WARNING] Aggregation failed with return code {result.returncode}")
+
+    except Exception as e:
+        print(f"\n[WARNING] Exception during aggregation: {e}")
+
+print("\n" + "=" * 80)
+print("[SUCCESS] Complete workflow finished!")
 print("=" * 80)
