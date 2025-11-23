@@ -1,0 +1,16 @@
+# ============================================================================
+# TRINCHERA STRATEGY - PYTHON DEPENDENCIES
+# ============================================================================
+# Install all dependencies with: pip install -r requirements.txt
+
+# ============================================================================
+
+# Core Data Processing
+pandas>=2.0.0
+
+# Visualization (Interactive HTML charts)
+plotly>=5.0.0
+
+# Implicit dependencies (automatically installed with pandas/plotly, but listed for clarity)
+numpy>=1.21.0
+python-dateutil>=2.8.0

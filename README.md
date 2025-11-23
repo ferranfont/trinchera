@@ -2,9 +2,23 @@
 
 Advanced mean reversion trading strategy for NQ (Nasdaq-100 E-mini) futures based on big volume detection and market profile analysis.
 
-[![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-Proprietary-red)](LICENSE)
-[![Status](https://img.shields.io/badge/status-Active-success)](https://github.com/ferranfont/trinchera)
+## ⚡ Quick Installation
+
+**ABRIR UNA VENTANA POWERSHELL Y EJECUTAR:**
+
+```powershell
+# 1. Instalar todas las dependencias
+pip install -r requirements.txt
+
+# 2. Ejecutar el pipeline completo
+python main_trinchera.py
+```
+
+**Dependencias instaladas:**
+- ✅ pandas (procesamiento de datos)
+- ✅ plotly (gráficos interactivos HTML)
+- ✅ numpy (cálculos numéricos)
+- ✅ python-dateutil (manejo de fechas)
 
 ## Overview
 
@@ -121,15 +135,37 @@ trinchera_strategy/
 
 ### Prerequisites
 
+- Python 3.8 or higher
+- Git (for cloning the repository)
+
+### Step 1: Install Git
+
+If you don't have Git installed, download and install it from:
+- **Windows**: [https://git-scm.com/download/win](https://git-scm.com/download/win)
+- **Mac**: [https://git-scm.com/download/mac](https://git-scm.com/download/mac) or use `brew install git`
+- **Linux**: `sudo apt-get install git` (Debian/Ubuntu) or `sudo yum install git` (Red Hat/CentOS)
+
+Verify Git installation:
 ```bash
-pip install pandas plotly
+git --version
 ```
 
-### Clone Repository
+### Step 2: Clone Repository
 
 ```bash
 git clone https://github.com/ferranfont/trinchera.git
 cd trinchera
+```
+
+### Step 3: Install Python Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Or install manually:
+```bash
+pip install pandas plotly
 ```
 
 ---
